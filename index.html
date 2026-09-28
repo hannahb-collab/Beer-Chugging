@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100 dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hong Kong Homies: LKF Beer Downing Showdown</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tone.js for Web Audio Sound Effects -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            display: ['Permanent Marker', 'cursive'],
+          },
+          colors: {
+            hkRed: '#FF0055',
+            hkNeonCyan: '#00F0FF',
+            hkGold: '#FFD700',
+            hkAmber: '#FF9900',
+            barDark: '#0A0B10',
+            barGlass: 'rgba(18, 20, 32, 0.75)'
+          },
+          boxShadow: {
+            'neon-red': '0 0 15px rgba(255, 0, 85, 0.6), 0 0 30px rgba(255, 0, 85, 0.3)',
+            'neon-cyan': '0 0 15px rgba(0, 240, 255, 0.6), 0 0 30px rgba(0, 240, 255, 0.3)',
+            'neon-gold': '0 0 15px rgba(255, 215, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.3)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0b10;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* HK Neon Text Flicker */
+    .neon-text-red {
+      color: #fff;
+      text-shadow: 0 0 5px #fff, 0 0 10px #ff0055, 0 0 20px #ff0055, 0 0 40px #ff0055;
+    }
+    .neon-text-cyan {
+      color: #fff;
+      text-shadow: 0 0 5px #fff, 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #00f0ff;
+    }
+    .neon-text-gold {
+      color: #fff;
+      text-shadow: 0 0 5px #fff, 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 40px #ffd700;
+    }
+
+    /* Animated Liquid Background in Pint Glass */
+    .beer-foam {
+      background: linear-gradient(180deg, #ffffff 0%, #fff7d6 100%);
+      box-shadow: inset 0 -2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .beer-liquid {
+      background: linear-gradient(180deg, #ffcc00 0%, #e67e22 100%);
+      transition: height 0.1s linear;
+    }
+
+    /* Floating bubbles animation inside pint */
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 0.8; }
+      100% { transform: translateY(-80px) scale(1.3); opacity: 0; }
+    }
+    .bubble {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      animation: floatUp 1.5s infinite ease-in;
+    }
+
+    /* Pulse effect on active tap */
+    @keyframes chugPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    .chugging-active {
+      animation: chugPulse 0.2s ease-in-out;
+    }
+
+    /* Background Neon Signs Flickering */
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      41.99% { opacity: 1; }
+      42% { opacity: 0.4; }
+      43% { opacity: 1; }
+      45% { opacity: 0.2; }
+      46% { opacity: 1; }
+      80% { opacity: 1; }
+      81% { opacity: 0.5; }
+      82% { opacity: 1; }
+    }
+    .neon-flicker {
+      animation: flicker 4s infinite alternate;
+    }
+
+    /* Bar Counter Texture Overlay */
+    .bar-counter {
+      background: linear-gradient(0deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9)), repeating-linear-gradient(45deg, #1e293b 0, #1e293b 10px, #0f172a 10px, #0f172a 20px);
+    }
+  </style>
+</head>
+
+<body class="h-full flex flex-col font-sans select-none overflow-x-hidden bg-slate-950 text-slate-100">
+
+  <!-- Background Ambiance Visuals (HK LKF Bar Scene) -->
+  <div class="fixed inset-0 pointer-events-none z-0 opacity-25">
+    <!-- HK Skyline Silhouette & Neon Graphics -->
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/40 via-slate-950 to-slate-950"></div>
+    <div class="absolute top-4 left-6 text-6xl font-black text-rose-500/30 neon-flicker">蘭桂坊</div>
+    <div class="absolute top-12 right-10 text-7xl font-black text-cyan-400/20 neon-flicker">通宵營業</div>
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 text-9xl font-black text-amber-500/10 tracking-widest">BEER 1MIN</div>
+  </div>
+
+  <!-- Top Navigation & Bar Header -->
+  <header class="relative z-10 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-4 py-3 shadow-xl">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Title & Branding -->
+      <div class="flex items-center space-x-3">
+        <div class="bg-gradient-to-tr from-amber-500 to-rose-500 p-2.5 rounded-xl shadow-lg text-2xl">
+          🍻
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-xl md:text-2xl font-black tracking-tight text-amber-400 font-display">
+              HONG KONG HOMIES
+            </h1>
+            <span class="bg-rose-500/20 text-rose-400 text-xs px-2 py-0.5 rounded-full font-bold border border-rose-500/40 uppercase tracking-wider">
+              LKF Arena
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">1-Minute Beer Downing World Championship</p>
+        </div>
+      </div>
+
+      <!-- Live Match Stats Header (Timer & Leader) -->
+      <div class="flex items-center space-x-6 bg-slate-950/80 px-4 py-2 rounded-2xl border border-slate-800">
+        <!-- Countdown Timer -->
+        <div class="text-center">
+          <div class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Time Remaining</div>
+          <div id="timerDisplay" class="text-3xl font-black text-rose-500 font-mono tracking-tight">01:00</div>
+        </div>
+        
+        <div class="h-8 w-px bg-slate-800"></div>
+
+        <!-- Total Beers Drunk -->
+        <div class="text-center">
+          <div class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Group Total Pints</div>
+          <div id="totalGroupBeers" class="text-2xl font-extrabold text-amber-400 font-mono">0.0</div>
+        </div>
+
+        <div class="h-8 w-px bg-slate-800"></div>
+
+        <!-- Current Leader -->
+        <div class="text-center hidden sm:block">
+          <div class="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Current Leader 👑</div>
+          <div id="currentLeaderName" class="text-sm font-bold text-cyan-400 truncate max-w-[120px]">
+            Ready...
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings & Controls Bar -->
+      <div class="flex items-center space-x-2">
+        <button id="soundToggleBtn" onclick="toggleAudio()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+          <span id="soundIcon">🔊</span>
+          <span id="soundLabel">Audio: ON</span>
+        </button>
+        <button id="helpBtn" onclick="toggleRulesModal()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition">
+          ❓ Rules
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="relative z-10 flex-1 flex flex-col max-w-7xl w-full mx-auto p-3 md:p-6 gap-6">
+
+    <!-- Pre-Game / Selection Banner -->
+    <div id="setupPanel" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 md:p-6 backdrop-blur-md shadow-2xl">
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div class="space-y-2 text-center lg:text-left">
+          <h2 class="text-2xl font-black text-amber-400 font-display flex items-center justify-center lg:justify-start gap-2">
+            <span>🇭🇰 Choose Your HK Homie</span>
+          </h2>
+          <p class="text-sm text-slate-300 max-w-xl">
+            Pick one Homie to personally tap & chug for, while the other 9 Homies use their custom drinking AI in real-time! Down as many pints as possible in 60 seconds!
+          </p>
+        </div>
+
+        <!-- Mode Select Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <button id="startMatchBtn" onclick="start60SecondChugMatch()" class="px-8 py-4 bg-gradient-to-r from-amber-500 via-rose-500 to-amber-500 bg-[length:200%_auto] hover:bg-right transition-all duration-300 text-slate-950 font-extrabold text-lg rounded-2xl shadow-neon-gold hover:scale-105 active:scale-95 flex items-center gap-2">
+            <span>🚀 START 1-MIN SHOWDOWN</span>
+          </button>
+          <button onclick="simulateFullAI()" class="px-5 py-4 bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-sm rounded-2xl transition">
+            🤖 Auto-Simulate (All AI)
+          </button>
+        </div>
+      </div>
+
+      <!-- Character Quick Select Grid -->
+      <div class="mt-6">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+          Select Your Player Character (Current: <span id="selectedPlayerName" class="text-cyan-400 font-black">Martin</span>):
+        </label>
+        <div id="characterPickerGrid" class="grid grid-cols-2 sm:grid-cols-5 md:grid-cols-10 gap-2">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- The LKF Bar Competition Floor (10 Homies) -->
+    <div id="barFloor" class="flex-1 bg-slate-900/60 border border-slate-800/80 rounded-3xl p-4 md:p-6 backdrop-blur-md flex flex-col justify-between relative overflow-hidden">
+      
+      <!-- LKF Bar Counter Top Header -->
+      <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-xs font-bold text-slate-300 tracking-wider uppercase">Live Bar Counter</span>
+        </div>
+        <div class="text-xs text-amber-400/80 font-mono">
+          🍺 Pint Capacity: 500ml per glass
+        </div>
+      </div>
+
+      <!-- Grid of 10 Homie Drinking Lanes -->
+      <div id="homiesLanesGrid" class="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-2 md:gap-3 my-auto">
+        <!-- 10 Dynamic Homie Cards Rendered via JS -->
+      </div>
+
+      <!-- Interactive Tap Control Zone (For Player Character) -->
+      <div class="mt-6 bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+        
+        <!-- Player Status Badge -->
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <div id="playerAvatarBadge" class="text-3xl bg-slate-800 p-2 rounded-xl border border-slate-700">
+            👦
+          </div>
+          <div>
+            <div class="text-xs text-slate-400">You are controlling:</div>
+            <div id="playerBadgeName" class="text-base font-black text-amber-400">Martin</div>
+            <div class="text-[11px] text-cyan-400 font-mono" id="playerSpecialAbility">Special: "The Tank" (+15% gulp size)</div>
+          </div>
+        </div>
+
+        <!-- Giant Interactive Chug Button -->
+        <div class="flex-1 w-full sm:w-auto flex justify-center">
+          <button id="tapChugBtn" disabled onclick="playerChugTap()" class="w-full sm:w-80 py-4 px-6 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 opacity-50 cursor-not-allowed text-slate-950 font-black text-lg md:text-xl rounded-2xl shadow-lg border-2 border-emerald-300/40 transition-all transform active:scale-95 flex items-center justify-center gap-3">
+            <span class="text-2xl animate-bounce">🍺</span>
+            <span id="tapBtnText">CLICK / TAP / SPACE TO CHUG!</span>
+          </button>
+        </div>
+
+        <!-- Combo / Stamina Meter -->
+        <div class="w-full sm:w-48 bg-slate-900 p-3 rounded-xl border border-slate-800 text-center">
+          <div class="text-[10px] uppercase font-bold text-slate-400 mb-1">Chug Rhythm Combo</div>
+          <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+            <div id="comboBar" class="bg-gradient-to-r from-cyan-400 to-rose-500 h-full rounded-full transition-all duration-100" style="width: 0%"></div>
+          </div>
+          <div id="comboText" class="text-xs font-black text-slate-300 mt-1">1.0x Speed Multiplier</div>
+        </div>
+
+      </div>
+
+      <!-- Live Commentary Bar Ticker -->
+      <div class="mt-4 bg-slate-950 border border-slate-800/80 rounded-xl px-4 py-2 flex items-center gap-3 text-xs">
+        <span class="bg-rose-500 text-slate-950 font-extrabold px-2 py-0.5 rounded text-[10px] tracking-wider uppercase shrink-0">LKF Ticker</span>
+        <div id="liveTickerText" class="text-slate-300 font-mono truncate">
+          Welcome to the Hong Kong Homies Beer Downing Championship! Press START to begin the 1-minute showdown!
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Match Results & Leaderboard Modal -->
+  <div id="resultsModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-2xl rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden max-h-[90vh] flex flex-col">
+      
+      <!-- Glow background -->
+      <div class="absolute -top-24 -left-24 w-60 h-60 bg-amber-500/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-rose-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <span class="text-4xl">🏆</span>
+        <h2 class="text-3xl font-black text-amber-400 font-display mt-1">CHAMPIONSHIP RESULTS</h2>
+        <p class="text-xs text-slate-400 mt-1">1-Minute Hong Kong Homies Beer Downing Battle</p>
+      </div>
+
+      <!-- Top 3 Podium Highlights -->
+      <div id="podiumContainer" class="grid grid-cols-3 gap-2 md:gap-4 mb-6">
+        <!-- JS Inserted Podium Cards -->
+      </div>
+
+      <!-- Full Leaderboard Table -->
+      <div class="flex-1 overflow-y-auto pr-1 border border-slate-800 rounded-2xl bg-slate-950/60 p-3 mb-6">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="text-slate-500 border-b border-slate-800 font-bold uppercase tracking-wider">
+              <th class="pb-2 pl-2">Rank</th>
+              <th class="pb-2">Homie</th>
+              <th class="pb-2 text-center">Pints Downed</th>
+              <th class="pb-2 text-center">Chug Rate</th>
+              <th class="pb-2 text-right pr-2">Status</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardTableBody" class="divide-y divide-slate-800/50">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button onclick="closeResultsAndReset()" class="flex-1 py-3.5 bg-gradient-to-r from-amber-500 to-rose-500 text-slate-950 font-black text-sm rounded-xl shadow-neon-gold hover:scale-[1.02] active:scale-95 transition">
+          🔄 REMATCH (NEW ROUND)
+        </button>
+        <button onclick="closeResultsModalOnly()" class="py-3.5 px-6 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm rounded-xl transition">
+          👀 Inspect Bar Counter
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Rules & Info Modal -->
+  <div id="rulesModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-bold text-amber-400 font-display">🍻 LKF Chug Rules</h3>
+        <button onclick="toggleRulesModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <div class="text-xs text-slate-300 space-y-2 leading-relaxed">
+        <p>1. **The Objective**: Down as many 500ml beer pints as possible in exactly 60 seconds.</p>
+        <p>2. **Player Controls**: Pick your Homie! Tap the giant **CHUG** button or press the **SPACEBAR** repeatedly with good rhythm to finish pints fast.</p>
+        <p>3. **Chug Combos**: Fast, rhythmic taps fill your combo bar for up to a 2.0x drinking multiplier!</p>
+        <p>4. **AI Competitors**: The other 9 Hong Kong Homies drink automatically based on their distinct drinking traits (Burp boosts, steady sipping, burst chugging, etc.).</p>
+        <p>5. **Hong Kong Homies Included**: Martin, Meredith, Sean, Hannah, Ed, Jenny, Sandeep, Luke, Dave, and Sydney!</p>
+      </div>
+      <button onclick="toggleRulesModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-xs rounded-xl">
+        Got It, Let's Drink!
+      </button>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+
+    // List of 10 Hong Kong Homies with unique avatars, perks, and AI personalities
+    const HOMIES_DATA = [
+      {
+        id: 'martin',
+        name: 'Martin',
+        title: 'The Bald Tank',
+        avatar: '👨‍🦲',
+        hairStyle: 'Bald Head',
+        perk: 'Extra gulps per pint (+15% capacity)',
+        baseSpeed: 1.15,
+        aiVariance: 0.25,
+        color: '#FF0055'
+      },
+      {
+        id: 'meredith',
+        name: 'Meredith',
+        title: 'Long Hair Speed Demon',
+        avatar: '👩🏻',
+        hairStyle: 'Long Black Hair',
+        perk: 'Rapid gulp rhythm',
+        baseSpeed: 1.25,
+        aiVariance: 0.35,
+        color: '#00F0FF'
+      },
+      {
+        id: 'sean',
+        name: 'Sean',
+        title: 'Wan Chai Siphon',
+        avatar: '👨‍🦲',
+        hairStyle: 'Bald Head',
+        perk: 'Steady chug without foam delay',
+        baseSpeed: 1.10,
+        aiVariance: 0.15,
+        color: '#FF9900'
+      },
+      {
+        id: 'hannah',
+        name: 'Hannah',
+        title: 'Iron Gullet',
+        avatar: '👩',
+        hairStyle: 'Clean & Focused',
+        perk: 'High burst chug power',
+        baseSpeed: 1.18,
+        aiVariance: 0.30,
+        color: '#A855F7'
+      },
+      {
+        id: 'ed',
+        name: 'Ed',
+        title: 'Professor Pints',
+        avatar: '👱‍♂️',
+        hairStyle: 'Blond Hair',
+        perk: 'Metronomic precision',
+        baseSpeed: 1.12,
+        aiVariance: 0.08,
+        color: '#10B981'
+      },
+      {
+        id: 'jenny',
+        name: 'Jenny',
+        title: 'SoHo Empress',
+        avatar: '👸',
+        hairStyle: 'Royal Style',
+        perk: 'Clutch late-game rush',
+        baseSpeed: 1.08,
+        aiVariance: 0.40,
+        color: '#EC4899'
+      },
+      {
+        id: 'sandeep',
+        name: 'Sandeep',
+        title: 'Thunder Chugger',
+        avatar: '👨‍🦱',
+        hairStyle: 'Long Flowing Hair',
+        perk: 'Massive burp speed boosts',
+        baseSpeed: 1.20,
+        aiVariance: 0.32,
+        color: '#EAB308'
+      },
+      {
+        id: 'luke',
+        name: 'Luke',
+        title: 'Bottomless Pit',
+        avatar: '👨‍🦲',
+        hairStyle: 'Bald Head',
+        perk: 'Huge swallow volumes',
+        baseSpeed: 1.14,
+        aiVariance: 0.20,
+        color: '#3B82F6'
+      },
+      {
+        id: 'dave',
+        name: 'Dave',
+        title: 'One-Take Dave',
+        avatar: '🧔',
+        hairStyle: 'Bearded Homie',
+        perk: 'Zero spill penalty',
+        baseSpeed: 1.16,
+        aiVariance: 0.22,
+        color: '#6366F1'
+      },
+      {
+        id: 'sydney',
+        name: 'Sydney',
+        title: 'Wildcard Syd',
+        avatar: '👩',
+        hairStyle: 'Classic Style',
+        perk: 'Unpredictable drinking frenzy',
+        baseSpeed: 1.10,
+        aiVariance: 0.50,
+        color: '#14B8A6'
+      }
+    ];
+
+    // Global Game State Variables
+    let homiesState = [];
+    let playerCharacterId = 'martin';
+    let matchTimeRemaining = 60; // 60 Seconds Match
+    let isMatchRunning = false;
+    let timerInterval = null;
+    let gameLoopInterval = null;
+    let playerCombo = 0;
+    let lastPlayerTapTime = 0;
+    let soundEnabled = true;
+
+
+    // Tone.js Synth Elements for Sound FX
+    let synthGulp = null;
+    let synthBurp = null;
+    let synthCheer = null;
+    let synthBell = null;
+    let audioInitialized = false;
+
+    function initAudio() {
+      if (audioInitialized) return;
+      try {
+        Tone.start();
+        
+        // Gulp Synth (Low Sine drop)
+        synthGulp = new Tone.Synth({
+          oscillator: { type: 'sine' },
+          envelope: { attack: 0.01, decay: 0.1, sustain: 0.0, release: 0.1 }
+        }).toDestination();
+        synthGulp.volume.value = -6;
+
+        // Burp / Finish Pint Synth (Pitch slide sawtooth)
+        synthBurp = new Tone.MonoSynth({
+          oscillator: { type: 'sawtooth' },
+          filter: { Q: 3, type: 'lowpass', rollover: -12 },
+          envelope: { attack: 0.05, decay: 0.3, sustain: 0, release: 0.2 }
+        }).toDestination();
+        synthBurp.volume.value = -4;
+
+        // Chime Bell Synth
+        synthBell = new Tone.PolySynth(Tone.Synth).toDestination();
+        synthBell.volume.value = -8;
+
+        audioInitialized = true;
+      } catch (e) {
+        console.log("Audio init fallback", e);
+      }
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      if (!audioInitialized) initAudio();
+
+      try {
+        if (type === 'gulp') {
+          const notes = ['C2', 'D2', 'E2', 'G2'];
+          const randomNote = notes[Math.floor(Math.random() * notes.length)];
+          synthGulp.triggerAttackRelease(randomNote, '16n');
+        } else if (type === 'pintFinish') {
+          synthBurp.triggerAttackRelease('G1', '8n');
+        } else if (type === 'startBell') {
+          synthBell.triggerAttackRelease(['C5', 'E5', 'G5', 'C6'], '8n');
+        } else if (type === 'finishBell') {
+          synthBell.triggerAttackRelease(['C4', 'G4', 'C5'], '4n');
+        }
+      } catch (err) {
+        // Quiet failure for audio context restriction
+      }
+    }
+
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      const label = document.getElementById('soundLabel');
+      const icon = document.getElementById('soundIcon');
+      if (soundEnabled) {
+        label.innerText = 'Audio: ON';
+        icon.innerText = '🔊';
+      } else {
+        label.innerText = 'Audio: OFF';
+        icon.innerText = '🔇';
+      }
+    }
+
+
+    // Initialize state on DOM Ready
+    window.addEventListener('DOMContentLoaded', () => {
+      initHomiesState();
+      renderCharacterPicker();
+      renderHomiesLanes();
+      setupKeyboardListener();
+    });
+
+    function initHomiesState() {
+      homiesState = HOMIES_DATA.map(h => ({
+        ...h,
+        totalBeers: 0,         // e.g. 3.4 pints
+        currentPintProgress: 0, // 0 to 100%
+        pintsFinished: 0,      // integer
+        statusText: 'Ready',
+        isBurping: false,
+        lastChugTimestamp: 0
+      }));
+    }
+
+    // Render 10 Character Buttons in Selection Panel
+    function renderCharacterPicker() {
+      const container = document.getElementById('characterPickerGrid');
+      container.innerHTML = '';
+
+      homiesState.forEach(h => {
+        const isSelected = h.id === playerCharacterId;
+        const card = document.createElement('button');
+        card.className = `p-2.5 rounded-xl border flex flex-col items-center justify-center transition ${
+          isSelected 
+            ? 'bg-amber-500/20 border-amber-400 text-white shadow-neon-gold scale-105' 
+            : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+        }`;
+        card.onclick = () => selectPlayerCharacter(h.id);
+
+        card.innerHTML = `
+          <span class="text-2xl">${h.avatar}</span>
+          <span class="text-xs font-bold mt-1 truncate w-full text-center">${h.name}</span>
+          <span class="text-[9px] text-slate-500">${h.pintsFinished} Pints</span>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectPlayerCharacter(id) {
+      if (isMatchRunning) return; // Cannot change mid-race
+      playerCharacterId = id;
+      const player = homiesState.find(h => h.id === id);
+      
+      document.getElementById('selectedPlayerName').innerText = player.name;
+      document.getElementById('playerBadgeName').innerText = player.name;
+      document.getElementById('playerAvatarBadge').innerText = player.avatar;
+      document.getElementById('playerSpecialAbility').innerText = `Perk: ${player.perk}`;
+
+      renderCharacterPicker();
+      renderHomiesLanes();
+    }
+
+    // Render the 10 Homies Bars/Cards in the main competition arena
+    function renderHomiesLanes() {
+      const container = document.getElementById('homiesLanesGrid');
+      container.innerHTML = '';
+
+      homiesState.forEach((h, index) => {
+        const isPlayer = h.id === playerCharacterId;
+        const lane = document.createElement('div');
+        lane.className = `bar-counter rounded-2xl border p-2.5 flex flex-col items-center justify-between relative transition-all duration-200 ${
+          isPlayer 
+            ? 'border-amber-400 shadow-neon-gold bg-slate-900/90 ring-1 ring-amber-400/50' 
+            : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
+        }`;
+
+        // Glass Pint Level (0% = empty, 100% = full beer)
+        const beerFillPercent = Math.max(0, 100 - h.currentPintProgress);
+
+        lane.innerHTML = `
+          <!-- Rank Badge -->
+          <div class="absolute top-2 left-2 bg-slate-950/80 text-[10px] font-mono px-1.5 py-0.5 rounded border border-slate-800 text-slate-400">
+            #<span class="homie-rank-num">${index + 1}</span>
+          </div>
+
+          <!-- Player Indicator Tag -->
+          ${isPlayer ? `<span class="absolute -top-2 bg-amber-400 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow">YOU</span>` : ''}
+
+          <!-- Avatar & Homie Name -->
+          <div class="text-center mt-3 w-full">
+            <div class="text-3xl transition-transform ${h.isBurping ? 'scale-125' : ''}">${h.avatar}</div>
+            <div class="text-xs font-black truncate w-full text-slate-100 mt-1">${h.name}</div>
+            <div class="text-[9px] text-amber-400/90 font-medium truncate">${h.hairStyle}</div>
+          </div>
+
+          <!-- Animated Beer Pint Glass Visual -->
+          <div class="my-3 w-12 h-24 bg-slate-950/80 border-2 border-amber-500/40 rounded-b-xl relative overflow-hidden flex flex-col justify-end shadow-inner">
+            <!-- Foam Layer -->
+            <div class="w-full h-3 beer-foam z-10 shrink-0 relative overflow-hidden">
+              <div class="absolute inset-0 bg-white/40 animate-pulse"></div>
+            </div>
+
+            <!-- Beer Liquid -->
+            <div class="w-full beer-liquid relative transition-all duration-100" style="height: ${beerFillPercent}%;">
+              <!-- Bubbles -->
+              <div class="bubble w-1 h-1 left-2 bottom-1"></div>
+              <div class="bubble w-1.5 h-1.5 left-5 bottom-2"></div>
+              <div class="bubble w-1 h-1 right-2 bottom-1"></div>
+            </div>
+
+            <!-- Empty Glass Measurement Grid lines -->
+            <div class="absolute inset-0 flex flex-col justify-between p-1 pointer-events-none opacity-20">
+              <div class="border-b border-white w-2"></div>
+              <div class="border-b border-white w-3"></div>
+              <div class="border-b border-white w-2"></div>
+            </div>
+          </div>
+
+          <!-- Pints Count & Status -->
+          <div class="w-full text-center space-y-1">
+            <div class="bg-slate-950/90 rounded-lg p-1 border border-slate-800">
+              <span class="text-xs font-mono font-bold text-amber-400">${h.totalBeers.toFixed(1)}</span>
+              <span class="text-[9px] text-slate-500">pints</span>
+            </div>
+            <div class="text-[10px] text-cyan-400 font-semibold truncate h-4">${h.statusText}</div>
+          </div>
+        `;
+
+        container.appendChild(lane);
+      });
+    }
+
+
+    // Keyboard Spacebar listener for active tap
+    function setupKeyboardListener() {
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          // Prevent page scroll when tapping spacebar
+          if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+            playerChugTap();
+          }
+        }
+      });
+    }
+
+    // Player Manual Tap Action
+    function playerChugTap() {
+      if (!isMatchRunning) return;
+
+      const player = homiesState.find(h => h.id === playerCharacterId);
+      if (!player) return;
+
+      // Rhythm & Combo calculation
+      const now = Date.now();
+      const timeDiff = now - lastPlayerTapTime;
+      lastPlayerTapTime = now;
+
+      if (timeDiff > 100 && timeDiff < 600) {
+        playerCombo = Math.min(100, playerCombo + 8);
+      } else {
+        playerCombo = Math.max(0, playerCombo - 10);
+      }
+
+      const comboMultiplier = 1.0 + (playerCombo / 100) * 1.0; // 1.0x to 2.0x
+      updateComboUI(comboMultiplier);
+
+      // Perform Gulp
+      const gulpAmount = (7.5 * player.baseSpeed * comboMultiplier);
+      applyGulpToHomie(player, gulpAmount, true);
+
+      // Button Visual Feedback
+      const btn = document.getElementById('tapChugBtn');
+      btn.classList.add('chugging-active');
+      setTimeout(() => btn.classList.remove('chugging-active'), 150);
+
+      playSound('gulp');
+    }
+
+    function updateComboUI(multiplier) {
+      const comboBar = document.getElementById('comboBar');
+      const comboText = document.getElementById('comboText');
+      comboBar.style.width = `${playerCombo}%`;
+      comboText.innerText = `${multiplier.toFixed(1)}x Speed Multiplier`;
+      if (playerCombo > 70) {
+        comboText.className = 'text-xs font-black text-rose-400 animate-pulse';
+      } else {
+        comboText.className = 'text-xs font-black text-slate-300';
+      }
+    }
+
+    // Apply drinking gulp logic to any Homie
+    function applyGulpToHomie(homie, amount, isPlayer = false) {
+      homie.currentPintProgress += amount;
+      homie.lastChugTimestamp = Date.now();
+
+      if (homie.currentPintProgress >= 100) {
+        // Finished a 500ml pint!
+        homie.pintsFinished += 1;
+        homie.totalBeers = homie.pintsFinished;
+        homie.currentPintProgress = 0;
+        homie.statusText = 'BURP! 🍺';
+        homie.isBurping = true;
+
+        playSound('pintFinish');
+
+        // Random live ticker announcement
+        triggerTicker(`${homie.name} just finished pint #${homie.pintsFinished}! 🍻`);
+
+        setTimeout(() => {
+          homie.isBurping = false;
+          homie.statusText = 'Chugging!';
+        }, 800);
+      } else {
+        homie.totalBeers = homie.pintsFinished + (homie.currentPintProgress / 100);
+        homie.statusText = isPlayer ? 'GULP GULP!' : 'Gulping...';
+      }
+
+      updateLeaderboardRanks();
+      renderHomiesLanes();
+    }
+
+    // AI Simulation Loop for all non-player Homies
+    function runAITick() {
+      if (!isMatchRunning) return;
+
+      homiesState.forEach(h => {
+        // Skip player in manual mode (unless auto simulate)
+        if (h.id === playerCharacterId && !isAutoSimulate) return;
+
+        // Dynamic AI Drinking Logic
+        // Random chug interval based on baseSpeed & variance
+        const randomFactor = (Math.random() - 0.5) * h.aiVariance;
+        const effectiveSpeed = Math.max(0.4, h.baseSpeed + randomFactor);
+
+        // Burst chance (e.g., Sandeep or Meredith late game)
+        let burst = 1.0;
+        if (Math.random() < 0.15) {
+          burst = 1.6; // Sudden gulp burst
+        }
+
+        const aiGulp = (3.5 * effectiveSpeed * burst);
+        applyGulpToHomie(h, aiGulp, false);
+      });
+    }
+
+    let isAutoSimulate = false;
+
+    // Start 60-Second Competition Match
+    function start60SecondChugMatch(autoSim = false) {
+      if (isMatchRunning) return;
+
+      isAutoSimulate = autoSim;
+      initHomiesState();
+      matchTimeRemaining = 60;
+      isMatchRunning = true;
+      playerCombo = 0;
+
+      // Enable/Disable buttons
+      const tapBtn = document.getElementById('tapChugBtn');
+      if (!isAutoSimulate) {
+        tapBtn.disabled = false;
+        tapBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      } else {
+        tapBtn.disabled = true;
+        tapBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+
+      document.getElementById('startMatchBtn').disabled = true;
+      document.getElementById('startMatchBtn').classList.add('opacity-50');
+
+      playSound('startBell');
+      triggerTicker(`🔥 60-SECOND CHUG RACE IS LIVE IN LAN KWAI FONG! GO! GO! GO!`);
+
+      // Timer Countdown Interval
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        matchTimeRemaining--;
+        updateTimerDisplay();
+
+        if (matchTimeRemaining <= 0) {
+          endMatch();
+        }
+      }, 1000);
+
+      // AI Chug Game Loop (Runs every 400ms)
+      clearInterval(gameLoopInterval);
+      gameLoopInterval = setInterval(() => {
+        runAITick();
+      }, 350);
+
+      updateLeaderboardRanks();
+      renderHomiesLanes();
+    }
+
+    function simulateFullAI() {
+      start60SecondChugMatch(true);
+    }
+
+    function updateTimerDisplay() {
+      const display = document.getElementById('timerDisplay');
+      const mins = Math.floor(matchTimeRemaining / 60);
+      const secs = matchTimeRemaining % 60;
+      display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+      if (matchTimeRemaining <= 10) {
+        display.classList.add('text-rose-500', 'animate-ping');
+      } else {
+        display.classList.remove('animate-ping');
+      }
+    }
+
+    function updateLeaderboardRanks() {
+      // Sort Homies by total beers downed descending
+      homiesState.sort((a, b) => b.totalBeers - a.totalBeers);
+
+      // Total group pints
+      const totalGroupPints = homiesState.reduce((sum, h) => sum + h.totalBeers, 0);
+      document.getElementById('totalGroupBeers').innerText = totalGroupPints.toFixed(1);
+
+      // Current Leader
+      if (homiesState.length > 0) {
+        document.getElementById('currentLeaderName').innerText = `${homiesState[0].avatar} ${homiesState[0].name} (${homiesState[0].totalBeers.toFixed(1)})`;
+      }
+    }
+
+    // End Match Logic & Trigger Celebrations
+    function endMatch() {
+      isMatchRunning = false;
+      clearInterval(timerInterval);
+      clearInterval(gameLoopInterval);
+
+      // Disable Tap Button
+      const tapBtn = document.getElementById('tapChugBtn');
+      tapBtn.disabled = true;
+      tapBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+      document.getElementById('startMatchBtn').disabled = false;
+      document.getElementById('startMatchBtn').classList.remove('opacity-50');
+
+      playSound('finishBell');
+      triggerTicker(`🏁 TIME'S UP! The LKF Homies Beer Downing Champion is ${homiesState[0].name}!`);
+
+      // Launch Confetti
+      try {
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      } catch(e){}
+
+      // Show Results Modal after short pause
+      setTimeout(() => {
+        openResultsModal();
+      }, 1000);
+    }
+
+    // Results Modal Rendering
+    function openResultsModal() {
+      const modal = document.getElementById('resultsModal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+
+      // Top 3 Podium
+      const podium = document.getElementById('podiumContainer');
+      podium.innerHTML = '';
+
+      const ranks = [
+        { pos: '2nd 🥈', color: 'border-slate-400 bg-slate-800/80', scale: 'sm:scale-95' },
+        { pos: '1st 👑', color: 'border-amber-400 bg-amber-500/10 shadow-neon-gold', scale: 'scale-105 z-10' },
+        { pos: '3rd 🥉', color: 'border-amber-700 bg-amber-900/20', scale: 'sm:scale-90' }
+      ];
+
+      // Reorder top 3 for podium layout: 2nd, 1st, 3rd
+      const podiumOrder = [
+        homiesState[1] || homiesState[0],
+        homiesState[0],
+        homiesState[2] || homiesState[0]
+      ];
+
+      podiumOrder.forEach((h, idx) => {
+        const config = ranks[idx];
+        const podiumCard = document.createElement('div');
+        podiumCard.className = `border-2 rounded-2xl p-3 flex flex-col items-center justify-between text-center transition-all ${config.color} ${config.scale}`;
+        podiumCard.innerHTML = `
+          <div class="text-xs font-black text-amber-400 uppercase tracking-wider">${config.pos}</div>
+          <div class="text-4xl my-2">${h.avatar}</div>
+          <div class="text-sm font-black text-white truncate w-full">${h.name}</div>
+          <div class="text-xs font-mono text-amber-400 mt-1 font-extrabold">${h.totalBeers.toFixed(2)} Pints</div>
+        `;
+        podium.appendChild(podiumCard);
+      });
+
+      // Full Leaderboard Table
+      const tableBody = document.getElementById('leaderboardTableBody');
+      tableBody.innerHTML = '';
+
+      homiesState.forEach((h, idx) => {
+        const isUser = h.id === playerCharacterId;
+        const row = document.createElement('tr');
+        row.className = `hover:bg-slate-800/40 transition ${isUser ? 'bg-amber-500/10 font-bold' : ''}`;
+
+        const pintsPerMin = (h.totalBeers).toFixed(2);
+
+        row.innerHTML = `
+          <td class="py-2.5 pl-2 font-mono text-slate-400">#${idx + 1}</td>
+          <td class="py-2.5 flex items-center gap-2">
+            <span>${h.avatar}</span>
+            <span class="${isUser ? 'text-amber-400' : 'text-slate-200'}">${h.name} ${isUser ? '(You)' : ''}</span>
+          </td>
+          <td class="py-2.5 text-center font-mono font-bold text-amber-400">${h.totalBeers.toFixed(2)}</td>
+          <td class="py-2.5 text-center font-mono text-xs text-cyan-400">${pintsPerMin} pints/min</td>
+          <td class="py-2.5 text-right pr-2">
+            <span class="text-[10px] px-2 py-0.5 rounded-full ${idx < 3 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-slate-800 text-slate-400'}">
+              ${idx === 0 ? '🏆 CHAMPION' : idx < 3 ? 'PODIUM' : 'FINISHER'}
+            </span>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function closeResultsAndReset() {
+      closeResultsModalOnly();
+      initHomiesState();
+      matchTimeRemaining = 60;
+      updateTimerDisplay();
+      renderHomiesLanes();
+      triggerTicker("Ready for another round in Lan Kwai Fong! Pick your homie and hit start!");
+    }
+
+    function closeResultsModalOnly() {
+      const modal = document.getElementById('resultsModal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function toggleRulesModal() {
+      const modal = document.getElementById('rulesModal');
+      if (modal.classList.contains('opacity-0')) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+      } else {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function triggerTicker(msg) {
+      document.getElementById('liveTickerText').innerText = msg;
+    }
+  </script>
+</body>
+</html>
